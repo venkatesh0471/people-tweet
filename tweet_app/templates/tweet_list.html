@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center text-white">
+    Welcome to People Tweet
+</h1>
+
+<a class="btn btn-primary mb-4" href="{% url 'tweet_create' %}">
+    Create Tweet
+</a>
+
+<div class="container row gap-3">
+
+    {% for tweet in tweets %}
+
+    <div class="card" style="width: 18rem;">
+
+        {% if tweet.photo %}
+        <img src="{{ tweet.photo.url }}"
+             class="card-img-top"
+             alt="Tweet Image">
+        {% endif %}
+
+        <div class="card-body">
+
+            <h5 class="card-title">
+                {{ tweet.user.username }}
+            </h5>
+
+            <p class="card-text">
+                {{ tweet.text }}
+            </p>
+
+            {% if tweet.user == user %}
+
+            <a href="{% url 'tweet_edit' tweet.id %}"
+               class="btn btn-primary">
+                Edit
+            </a>
+
+            <a href="{% url 'tweet_delete' tweet.id %}"
+               class="btn btn-danger">
+                Delete
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+        <p class="text-white">
+            No tweets found
+            {% if search_query %}
+                for "{{ search_query }}"
+            {% endif %}
+        </p>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
