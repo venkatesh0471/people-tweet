@@ -12,26 +12,23 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# ---------------------------------------------------------
+# SECURITY
+# ---------------------------------------------------------
 
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
     'django-insecure-local-development-key'
 )
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -40,7 +37,9 @@ ALLOWED_HOSTS = [
 ]
 
 
-# Application definition
+# ---------------------------------------------------------
+# APPLICATIONS
+# ---------------------------------------------------------
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -53,6 +52,10 @@ INSTALLED_APPS = [
     'tweet_app',
 ]
 
+
+# ---------------------------------------------------------
+# MIDDLEWARE
+# ---------------------------------------------------------
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -67,15 +70,23 @@ MIDDLEWARE = [
 ]
 
 
+# ---------------------------------------------------------
+# URLS
+# ---------------------------------------------------------
+
 ROOT_URLCONF = 'people_tweet.urls'
 
+
+# ---------------------------------------------------------
+# TEMPLATES
+# ---------------------------------------------------------
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
 
         'DIRS': [
-            BASE_DIR / "people_tweet" / "templates"
+            BASE_DIR / 'people_tweet' / 'templates'
         ],
 
         'APP_DIRS': True,
@@ -91,22 +102,30 @@ TEMPLATES = [
 ]
 
 
+# ---------------------------------------------------------
+# WSGI
+# ---------------------------------------------------------
+
 WSGI_APPLICATION = 'people_tweet.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# ---------------------------------------------------------
+# DATABASE
+# ---------------------------------------------------------
+# Local machine  → SQLite
+# Render         → PostgreSQL using DATABASE_URL
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
+# ---------------------------------------------------------
+# PASSWORD VALIDATION
+# ---------------------------------------------------------
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -124,8 +143,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
+# ---------------------------------------------------------
+# INTERNATIONALIZATION
+# ---------------------------------------------------------
 
 LANGUAGE_CODE = 'en-us'
 
@@ -136,29 +156,34 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
+# ---------------------------------------------------------
+# STATIC FILES
+# ---------------------------------------------------------
 
 STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'static',
 ]
 
 
-# Media files
+# ---------------------------------------------------------
+# MEDIA FILES
+# ---------------------------------------------------------
 
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-# Authentication
+# ---------------------------------------------------------
+# AUTHENTICATION
+# ---------------------------------------------------------
 
-LOGIN_URL = "/accounts/login/"
+LOGIN_URL = '/accounts/login/'
 
-LOGIN_REDIRECT_URL = "/tweet/"
+LOGIN_REDIRECT_URL = '/tweet/'
 
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = '/'
